@@ -2,12 +2,23 @@ const launchesDatabase = require('./launches.mongo');
 
 let latestFlightNumber = 100;
 
+const launch = {
+  flightNumber: 100,
+  mission: 'Kepler Exploration X',
+  rocket: 'Explorer IS1',
+  target: 'Kepler-442 b',
+  launchDate: new Date('December 5, 2030'),
+  customers: ['DARPA', 'NASA', 'NOAA'],
+  upcoming: true,
+  success: true,
+};
+
 function existsLaunchWithId(launchId) {
   return launches.has(launchId);
 }
 
-function getAllLaunches() {
-  return Array.from(launches.values());
+async function getAllLaunches() {
+  return await launchesDatabase.find({}, { _id: 0, __v: 0 });
 }
 
 async function saveLaunch(launch) {
@@ -43,6 +54,8 @@ function abortLaunchById(launchId) {
 }
 
 module.exports = {
+  launch,
+  saveLaunch,
   existsLaunchWithId,
   getAllLaunches,
   addNewLaunch,
