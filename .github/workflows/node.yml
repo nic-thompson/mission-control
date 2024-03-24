@@ -8,17 +8,23 @@ jobs:
   build:
     env:
       CI: true
+      MONGO_URL: mongodb://localhost:27017/mission-control
     strategy:
       matrix:
-        node-version: [14.x, 16.x]
+        node-version: [20.x]
+        mongodb-version: ['4.4']
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Setup Node.js with version ${{ matrix.node-version }}
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
+      - name: Use MongoDB from GitHub actions
+        uses: supercharge/mongodb-github-action@1.6.0
+        with:
+          mongodb-version: ${{ matrix.mongodb-version }}
       - run: npm install
       - run: npm run build --prefix client
       - run: npm test
